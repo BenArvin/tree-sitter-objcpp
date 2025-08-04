@@ -11575,6 +11575,10 @@
     [
       "declaration",
       "_argument_type_declarator"
+    ],
+    [
+      "_declaration_modifiers",
+      "class_interface"
     ]
   ],
   "precedences": [],

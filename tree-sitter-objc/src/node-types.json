@@ -34,6 +34,10 @@
         "named": true
       },
       {
+        "type": "attributed_declarator",
+        "named": true
+      },
+      {
         "type": "block_declarator",
         "named": true
       },
@@ -230,6 +234,10 @@
         "named": true
       },
       {
+        "type": "attributed_declarator",
+        "named": true
+      },
+      {
         "type": "block_declarator",
         "named": true
       },
@@ -255,6 +263,10 @@
     "type": "_statement",
     "named": true,
     "subtypes": [
+      {
+        "type": "attributed_statement",
+        "named": true
+      },
       {
         "type": "autoreleasepool_statement",
         "named": true
@@ -335,6 +347,10 @@
     "subtypes": [
       {
         "type": "array_declarator",
+        "named": true
+      },
+      {
+        "type": "attributed_declarator",
         "named": true
       },
       {
@@ -590,6 +606,56 @@
           }
         ]
       },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "%=",
+            "named": false
+          },
+          {
+            "type": "&=",
+            "named": false
+          },
+          {
+            "type": "*=",
+            "named": false
+          },
+          {
+            "type": "+=",
+            "named": false
+          },
+          {
+            "type": "-=",
+            "named": false
+          },
+          {
+            "type": "/=",
+            "named": false
+          },
+          {
+            "type": "<<=",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": ">>=",
+            "named": false
+          },
+          {
+            "type": "^=",
+            "named": false
+          },
+          {
+            "type": "|=",
+            "named": false
+          }
+        ]
+      },
       "right": {
         "multiple": false,
         "required": true,
@@ -629,6 +695,57 @@
     }
   },
   {
+    "type": "attribute",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "prefix": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "argument_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attribute_declaration",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "attribute",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "attribute_specifier",
     "named": true,
     "fields": {},
@@ -650,6 +767,52 @@
         },
         {
           "type": "method_variadic_arguments_attribute_specifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attributed_declarator",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "_declarator",
+          "named": true
+        },
+        {
+          "type": "_field_declarator",
+          "named": true
+        },
+        {
+          "type": "_type_declarator",
+          "named": true
+        },
+        {
+          "type": "attribute_declaration",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attributed_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "_statement",
+          "named": true
+        },
+        {
+          "type": "attribute_declaration",
           "named": true
         }
       ]
@@ -1029,6 +1192,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "attributed_statement",
+          "named": true
+        },
         {
           "type": "autoreleasepool_statement",
           "named": true
@@ -2083,6 +2250,10 @@
       "required": false,
       "types": [
         {
+          "type": "attribute_declaration",
+          "named": true
+        },
+        {
           "type": "attribute_specifier",
           "named": true
         },
@@ -2631,6 +2802,10 @@
       "required": false,
       "types": [
         {
+          "type": "attribute_declaration",
+          "named": true
+        },
+        {
           "type": "attribute_specifier",
           "named": true
         },
@@ -2726,6 +2901,20 @@
             "named": true
           }
         ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "->",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          }
+        ]
       }
     }
   },
@@ -2781,6 +2970,10 @@
           },
           {
             "type": "atomic_specifier",
+            "named": true
+          },
+          {
+            "type": "attribute_declaration",
             "named": true
           },
           {
@@ -2965,12 +3158,26 @@
     "type": "for_statement",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_statement",
+            "named": true
+          }
+        ]
+      },
       "condition": {
         "multiple": false,
         "required": false,
         "types": [
           {
             "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "comma_expression",
             "named": true
           }
         ]
@@ -3007,16 +3214,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "_statement",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -3170,6 +3367,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "attribute_declaration",
+          "named": true
+        },
         {
           "type": "attribute_specifier",
           "named": true
@@ -3628,6 +3829,10 @@
             "named": true
           },
           {
+            "type": "attribute_declaration",
+            "named": true
+          },
+          {
             "type": "attribute_specifier",
             "named": true
           },
@@ -3973,6 +4178,10 @@
             "named": true
           },
           {
+            "type": "attribute_declaration",
+            "named": true
+          },
+          {
             "type": "attribute_specifier",
             "named": true
           },
@@ -4250,6 +4459,10 @@
           },
           {
             "type": "atomic_specifier",
+            "named": true
+          },
+          {
+            "type": "attribute_declaration",
             "named": true
           },
           {
@@ -4780,6 +4993,10 @@
       "required": false,
       "types": [
         {
+          "type": "attribute_declaration",
+          "named": true
+        },
+        {
           "type": "attribute_specifier",
           "named": true
         },
@@ -4808,6 +5025,10 @@
       "types": [
         {
           "type": "parameter_declaration",
+          "named": true
+        },
+        {
+          "type": "variadic_parameter",
           "named": true
         }
       ]
@@ -7535,6 +7756,11 @@
     }
   },
   {
+    "type": "variadic_parameter",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "while_statement",
     "named": true,
     "fields": {
@@ -7702,6 +7928,10 @@
   },
   {
     "type": ":",
+    "named": false
+  },
+  {
+    "type": "::",
     "named": false
   },
   {
@@ -8001,7 +8231,15 @@
     "named": false
   },
   {
+    "type": "[[",
+    "named": false
+  },
+  {
     "type": "]",
+    "named": false
+  },
+  {
+    "type": "]]",
     "named": false
   },
   {
@@ -8387,11 +8625,11 @@
   },
   {
     "type": "number_literal",
-    "named": false
+    "named": true
   },
   {
     "type": "number_literal",
-    "named": true
+    "named": false
   },
   {
     "type": "oneway",
