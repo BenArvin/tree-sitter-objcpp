@@ -1,0 +1,3 @@
+- [tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c): 7175a6dd5fc1cee660dce6fe23f6043d75af424a
+- [tree-sitter-objc](https://github.com/jiyee/tree-sitter-objc): afec0de5a32d5894070b67932d6ff09e4f7c5879
+- [tree-sitter-objcpp](https://github.com/panicinc/tree-sitter-objcpp): af4901aa56d459b33487c307f4951068a2365b1e
