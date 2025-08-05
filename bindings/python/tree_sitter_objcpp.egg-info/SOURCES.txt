@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+bindings/python/tree_sitter_objcpp/__init__.py
+bindings/python/tree_sitter_objcpp/__init__.pyi
+bindings/python/tree_sitter_objcpp/binding.c
+bindings/python/tree_sitter_objcpp/py.typed
+bindings/python/tree_sitter_objcpp.egg-info/PKG-INFO
+bindings/python/tree_sitter_objcpp.egg-info/SOURCES.txt
+bindings/python/tree_sitter_objcpp.egg-info/dependency_links.txt
+bindings/python/tree_sitter_objcpp.egg-info/not-zip-safe
+bindings/python/tree_sitter_objcpp.egg-info/top_level.txt
+src/parser.c

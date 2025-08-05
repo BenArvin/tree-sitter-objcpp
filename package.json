@@ -1,8 +1,8 @@
 {
-  "name": "tree-sitter-objc",
+  "name": "tree-sitter-objcpp",
   "version": "3.0.2",
   "description": "Objective-C grammar for tree-sitter",
-  "repository": "https://github.com/tree-sitter-grammars/tree-sitter-objc",
+  "repository": "https://github.com/BenArvin/tree-sitter-objcpp",
   "license": "MIT",
   "author": {
     "name": "Amaan Qureshi",

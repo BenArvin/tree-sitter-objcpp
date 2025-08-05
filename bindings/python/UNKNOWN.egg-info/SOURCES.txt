@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+bindings/python/UNKNOWN.egg-info/PKG-INFO
+bindings/python/UNKNOWN.egg-info/SOURCES.txt
+bindings/python/UNKNOWN.egg-info/dependency_links.txt
+bindings/python/UNKNOWN.egg-info/not-zip-safe
+bindings/python/UNKNOWN.egg-info/top_level.txt
+bindings/python/tree_sitter_objcpp/__init__.py
+bindings/python/tree_sitter_objcpp/__init__.pyi
+bindings/python/tree_sitter_objcpp/binding.c
+bindings/python/tree_sitter_objcpp/py.typed
+src/parser.c

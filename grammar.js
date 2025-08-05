@@ -12,7 +12,7 @@ const C = require('tree-sitter-c/grammar');
 
 // Welcome to Hell
 module.exports = grammar(C, {
-  name: 'objc',
+  name: 'objcpp',
 
   extras: $ => [
     /\u00A0|\s|\\\r?\n/,
@@ -32,6 +32,8 @@ module.exports = grammar(C, {
     [$.extension_expression, $.range_expression],
     [$.abstract_array_declarator, $.array_type_specifier],
     [$._type_definition_type],
+    [$.expression_statement, $._for_statement_body], // MARK: cpp
+    [$.init_statement, $._for_statement_body], // MARK: cpp
   ]),
 
   inline: ($, original) => original.concat([
@@ -74,6 +76,9 @@ module.exports = grammar(C, {
       $.preproc_linemarker,
     ),
 
+    // MARK: cpp
+    auto: _ => 'auto',
+
     function_definition: $ => seq(
       optional($.ms_call_modifier),
       $._declaration_specifiers,
@@ -90,6 +95,106 @@ module.exports = grammar(C, {
       )))),
       optional($._declaration_modifiers),
       ';',
+    ),
+
+    //MARK: cpp
+    _namespace_identifier: $ => alias($.identifier, $.namespace_identifier),
+
+    //MARK: cpp
+    template_type: $ => seq(
+      field('name', $._type_identifier),
+      field('arguments', $.template_argument_list),
+    ),
+
+    // MARK: cpp
+    type_parameter_pack_expansion: $ => seq(
+      field('pattern', $.type_descriptor),
+      '...',
+    ),
+
+    // MARK: cpp
+    decltype: $ => seq(
+      'decltype',
+      '(',
+      $.expression,
+      ')',
+    ),
+
+    //MARK: cpp
+    template_argument_list: $ => seq(
+      '<',
+      commaSep(choice(
+        prec.dynamic(3, $.type_descriptor),
+        prec.dynamic(2, alias($.type_parameter_pack_expansion, $.parameter_pack_expansion)),
+        prec.dynamic(1, $.expression),
+      )),
+      alias(token(prec(1, '>')), '>'),
+    ),
+
+    // MARK: cpp
+    dependent_type_identifier: $ => seq('template', $.template_type),
+
+    // MARK: cpp
+    _scope_resolution: $ => prec(1, seq(
+      field('scope', optional(choice(
+        $._namespace_identifier,
+        $.template_type,
+        $.decltype,
+        alias($.dependent_type_identifier, $.dependent_name),
+      ))),
+      '::',
+    )),
+
+    // MARK: cpp
+    template_function: $ => seq(
+      field('name', $.identifier),
+      field('arguments', $.template_argument_list),
+    ),
+
+    // MARK: cpp
+    operator_name: $ => prec(1, seq(
+      'operator',
+      choice(
+        'co_await',
+        '+', '-', '*', '/', '%',
+        '^', '&', '|', '~',
+        '!', '=', '<', '>',
+        '+=', '-=', '*=', '/=', '%=', '^=', '&=', '|=',
+        '<<', '>>', '>>=', '<<=',
+        '==', '!=', '<=', '>=',
+        '<=>',
+        '&&', '||',
+        '++', '--',
+        ',',
+        '->*',
+        '->',
+        '()', '[]',
+        'xor', 'bitand', 'bitor', 'compl',
+        'not', 'xor_eq', 'and_eq', 'or_eq', 'not_eq',
+        'and', 'or',
+        seq(choice('new', 'delete'), optional('[]')),
+        seq('""', $.identifier),
+      ),
+    )),
+
+    // MARK: cpp
+    destructor_name: $ => prec(1, seq('~', $.identifier)),
+
+    // MARK: cpp
+    dependent_identifier: $ => seq('template', $.template_function),
+
+    // MARK: cpp
+    qualified_identifier: $ => seq(
+      $._scope_resolution,
+      field('name', choice(
+        alias($.dependent_identifier, $.dependent_name),
+        $.qualified_identifier,
+        $.template_function,
+        seq(optional('template'), $.identifier),
+        $.operator_name,
+        $.destructor_name,
+        $.pointer_type_declarator,
+      )),
     ),
 
     type_definition: $ => seq(
@@ -171,6 +276,7 @@ module.exports = grammar(C, {
       $.encode_expression,
       $.va_arg_expression,
       $.keyword_identifier,
+      $.cpp_std_string_expression,
     ),
 
     cast_expression: $ => prec(C.PREC.CAST, choice(
@@ -250,6 +356,7 @@ module.exports = grammar(C, {
     _declarator: ($, original) => prec.right(choice(
       ...original.members.filter(member => member.name !== 'attributed_declarator'),
       $.block_pointer_declarator,
+      $.cpp_reference_declarator,
     )),
 
     _abstract_declarator: ($, original) => choice(
@@ -273,6 +380,24 @@ module.exports = grammar(C, {
       $.primitive_type,
     ),
 
+    // MARK: cpp
+    alias_declaration: $ => seq(
+      'using',
+      field('name', $._type_identifier),
+      repeat($.attribute_declaration),
+      '=',
+      field('type', $.type_descriptor),
+      ';',
+    ),
+
+    // MARK: cpp
+    init_statement: $ => choice(
+      $.alias_declaration,
+      $.type_definition,
+      $.declaration,
+      $.expression_statement,
+    ),
+
     for_statement: ($, original) => choice(
       original,
       prec(1, seq(
@@ -284,6 +409,21 @@ module.exports = grammar(C, {
         ),
         'in',
         $.expression,
+        ')',
+        $._non_case_statement,
+      )),
+      // MARK: cpp
+      prec(2, seq(
+        'for',
+        '(',
+        field('initializer', optional($.init_statement)),
+        $._declaration_specifiers,
+        field('declarator', $._declarator),
+        ':',
+        field('right', choice(
+          $.expression,
+          $.initializer_list,
+        )),
         ')',
         $._non_case_statement,
       )),
@@ -1015,12 +1155,62 @@ module.exports = grammar(C, {
       )),
     )),
 
+    cpp_std_string_expression: $ => seq(
+      'std::string',
+      '(',
+      optional($.expression),
+      optional(seq(',', $.expression)),
+      ')',
+    ),
+
+    cpp_namespace_type_specifier: $ => prec.right(seq(
+      repeat1(seq($.identifier, '::')),
+      choice(
+        $.identifier,
+        $.cpp_template_type
+      ),
+    )),
+
+    cpp_template_types: $ => choice(
+      "vector",
+      "shared_ptr",
+      "unique_ptr",
+      "optional",
+      "map",
+      "unordered_map",
+      "set",
+      "unordered_set",
+      "tuple",
+      "array",
+      "pair",
+      "list",
+      "deque",
+      "stack",
+      "queue",
+      "forward_list",
+      "bitset",
+    ),
+
+    cpp_template_type: $ => prec.right(2, seq(
+      $.identifier,
+      '<',
+      $.type_name,
+      '>',
+    )),
+
+    cpp_reference_declarator: $ => prec.dynamic(1, prec.right(seq(
+      choice('&', '&&'),
+      $._declarator,
+    ))),
+
     type_specifier: ($, original) => choice(
       original,
       $.typedefed_specifier,
       $.generic_specifier,
       $.typeof_specifier,
       $.array_type_specifier,
+      $.cpp_namespace_type_specifier,
+      $.cpp_template_type,
     ),
 
     typedefed_identifier: _ => choice(
@@ -1106,14 +1296,28 @@ module.exports = grammar(C, {
       ));
     },
 
-    string_literal: $ => seq(
-      choice(seq('@', '"'), 'L"', 'u"', 'U"', 'u8"', '"'),
-      repeat(choice(
-        alias(token.immediate(prec(1, /[^\\"\n]+/)), $.string_content),
-        $.escape_sequence,
-      )),
-      '"',
+    string_literal: $ => choice(
+        seq(
+        choice(seq('@', '"'), 'L"', 'u"', 'U"', 'u8"', '"'),
+        repeat(choice(
+          alias(token.immediate(prec(1, /[^\\"\n]+/)), $.string_content),
+          $.escape_sequence,
+        )),
+        '"',
+      ),
+      $.WWKMP_MULTI_LAN_STRING,
     ),
+
+    WWKMP_MULTI_LAN_STRING: $ => prec.left(seq(
+      'R_NSSTRING',
+      '(',
+      'WWKMP',
+      repeat(seq(
+        '::',
+        $.identifier,
+      )),
+      ')',
+    )),
 
     dictionary_literal: $ => seq(
       '@',

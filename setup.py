@@ -2,12 +2,12 @@ from os import path
 from platform import system
 
 from setuptools import Extension, find_packages, setup
-from setuptools.command.build import build
+from setuptools.command.build_py import build_py as build
 from setuptools.command.egg_info import egg_info
 from wheel.bdist_wheel import bdist_wheel
 
 sources = [
-    "bindings/python/tree_sitter_objc/binding.c",
+    "bindings/python/tree_sitter_objcpp/binding.c",
     "src/parser.c",
 ]
 if path.exists("src/scanner.c"):
@@ -22,7 +22,7 @@ else:
 class Build(build):
     def run(self):
         if path.isdir("queries"):
-            dest = path.join(self.build_lib, "tree_sitter_objc", "queries")
+            dest = path.join(self.build_lib, "tree_sitter_objcpp", "queries")
             self.copy_tree("queries", dest)
         super().run()
 
@@ -43,13 +43,15 @@ class EggInfo(egg_info):
 
 
 setup(
+    name="tree-sitter-objcpp",
+    version="3.0.2",
     packages=find_packages("bindings/python"),
     package_dir={"": "bindings/python"},
     package_data={
-        "tree_sitter_objc": ["*.pyi", "py.typed"],
-        "tree_sitter_objc.queries": ["*.scm"],
+        "tree_sitter_objcpp": ["*.pyi", "py.typed"],
+        "tree_sitter_objcpp.queries": ["*.scm"],
     },
-    ext_package="tree_sitter_objc",
+    ext_package="tree_sitter_objcpp",
     ext_modules=[
         Extension(
             name="_binding",
@@ -65,7 +67,7 @@ setup(
         )
     ],
     cmdclass={
-        "build": Build,
+        "build_py": Build,
         "bdist_wheel": BdistWheel,
         "egg_info": EggInfo,
     },

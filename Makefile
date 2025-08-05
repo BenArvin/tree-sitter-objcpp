@@ -2,8 +2,8 @@ ifeq ($(OS),Windows_NT)
 $(error Windows is not supported)
 endif
 
-LANGUAGE_NAME := tree-sitter-objc
-HOMEPAGE_URL := https://github.com/tree-sitter-grammars/tree-sitter-objc
+LANGUAGE_NAME := tree-sitter-objcpp
+HOMEPAGE_URL := https://github.com/BenArvin/tree-sitter-objcpp
 VERSION := 3.0.2
 
 # repository

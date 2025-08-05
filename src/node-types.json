@@ -38,6 +38,10 @@
         "named": true
       },
       {
+        "type": "cpp_reference_declarator",
+        "named": true
+      },
+      {
         "type": "function_declarator",
         "named": true
       },
@@ -177,6 +181,10 @@
       },
       {
         "type": "conditional_expression",
+        "named": true
+      },
+      {
+        "type": "cpp_std_string_expression",
         "named": true
       },
       {
@@ -378,6 +386,14 @@
         "named": true
       },
       {
+        "type": "cpp_namespace_type_specifier",
+        "named": true
+      },
+      {
+        "type": "cpp_template_type",
+        "named": true
+      },
+      {
         "type": "enum_specifier",
         "named": true
       },
@@ -418,6 +434,21 @@
         "named": true
       }
     ]
+  },
+  {
+    "type": "WWKMP_MULTI_LAN_STRING",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "abstract_array_declarator",
@@ -605,6 +636,42 @@
         },
         {
           "type": "type_qualifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alias_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_descriptor",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "attribute_declaration",
           "named": true
         }
       ]
@@ -1950,6 +2017,74 @@
     "fields": {}
   },
   {
+    "type": "cpp_namespace_type_specifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "cpp_template_type",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cpp_reference_declarator",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "_declarator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cpp_std_string_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cpp_template_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "declaration",
     "named": true,
     "fields": {
@@ -2566,6 +2701,16 @@
           }
         ]
       },
+      "declarator": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "_declarator",
+            "named": true
+          }
+        ]
+      },
       "initializer": {
         "multiple": false,
         "required": false,
@@ -2580,6 +2725,24 @@
           },
           {
             "type": "expression",
+            "named": true
+          },
+          {
+            "type": "init_statement",
+            "named": true
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "initializer_list",
             "named": true
           }
         ]
@@ -3260,6 +3423,33 @@
       "types": [
         {
           "type": "attribute_specifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "init_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "alias_declaration",
+          "named": true
+        },
+        {
+          "type": "declaration",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "type_definition",
           "named": true
         }
       ]
@@ -5617,6 +5807,10 @@
       "required": false,
       "types": [
         {
+          "type": "WWKMP_MULTI_LAN_STRING",
+          "named": true
+        },
+        {
           "type": "escape_sequence",
           "named": true
         },
@@ -6878,6 +7072,10 @@
     "named": false
   },
   {
+    "type": "R_NSSTRING",
+    "named": false
+  },
+  {
     "type": "SEL",
     "named": false
   },
@@ -6899,6 +7097,10 @@
   },
   {
     "type": "UNAVAILABLE_ATTRIBUTE",
+    "named": false
+  },
+  {
+    "type": "WWKMP",
     "named": false
   },
   {
@@ -7223,7 +7425,8 @@
   },
   {
     "type": "comment",
-    "named": true
+    "named": true,
+    "extra": true
   },
   {
     "type": "const",
@@ -7414,6 +7617,10 @@
     "named": false
   },
   {
+    "type": "std::string",
+    "named": false
+  },
+  {
     "type": "string_content",
     "named": true
   },
@@ -7475,6 +7682,10 @@
   },
   {
     "type": "unsigned",
+    "named": false
+  },
+  {
+    "type": "using",
     "named": false
   },
   {
